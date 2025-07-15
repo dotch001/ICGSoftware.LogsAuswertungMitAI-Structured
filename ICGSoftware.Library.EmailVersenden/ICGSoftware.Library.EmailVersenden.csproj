@@ -27,5 +27,6 @@
     <ProjectReference Include="..\ICGSoftware.Library.Logging\ICGSoftware.Library.Logging.csproj" />
     <ProjectReference Include="..\ICGSoftware.Library.LogsAuswerten\ICGSoftware.Library.LogsAuswerten.csproj" />
   </ItemGroup>
+  
 
 </Project>
