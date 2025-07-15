@@ -1,0 +1,1 @@
+# ICGSoftware.LogsAuswertungMitAI(Structured)
