@@ -43,10 +43,16 @@ namespace ICGSoftware.Library.LogsAuswerten
             // Configuration of ApplicationSettings
 
             var config = new ConfigurationBuilder()
-                .AddJsonFile("applicationSettings_LogsAuswerten.json")
+                .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Development.json")
                 .Build();
 
-            var settings = config.GetSection("ApplicationSettings").Get<ApplicationSettingsClass>();
+            var settings = config.GetSection("AppSettings").Get<AppSettingsClassDev>();
+
+            var config2 = new ConfigurationBuilder()
+                .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Confidential.json")
+                .Build();
+
+            var confidential = config2.GetSection("AppSettings").Get<AppSettingsClassConf>();
 
 
             try
@@ -203,7 +209,7 @@ namespace ICGSoftware.Library.LogsAuswerten
                         {
                             string[] filesInOutput = Directory.GetFiles(outputFolder);
                             string PathToFile = filesInOutput[k];
-                            string response = await AskAndGetResponse(outputFolder, k, fileAsText, settings, stoppingToken);
+                            string response = await AskAndGetResponse(outputFolder, k, fileAsText, settings, confidential, stoppingToken);
                             allResponses = allResponses + $"<b><br /><br />----------------------------------------------{PathToFile}----------------------------------------------<br /><br /></b>" + response;
                             ConsoleLogsAndInformation(settings.inform, response);
                         }
@@ -229,7 +235,7 @@ namespace ICGSoftware.Library.LogsAuswerten
 
 
 
-        public static async Task<string> AskAndGetResponse(string outputFolder, int k, string fileAsText, ApplicationSettingsClass settings, CancellationToken stoppingToken)
+        public static async Task<string> AskAndGetResponse(string outputFolder, int k, string fileAsText, AppSettingsClassDev settings,AppSettingsClassConf confidential, CancellationToken stoppingToken)
         {
             string[] filesInOutput = Directory.GetFiles(outputFolder);
             string PathToFile = filesInOutput[k];
@@ -242,7 +248,7 @@ namespace ICGSoftware.Library.LogsAuswerten
             await Task.Delay(1000);
             ConsoleLogsAndInformation(settings.inform, $"\n\n----------------------------------------------{PathToFile}----------------------------------------------\n\n");
             string model = settings.models[settings.chosenModel];
-            string response = await AskQuestionAboutFile(settings.ApiKey, settings.Question, fileAsText, model, settings, stoppingToken);
+            string response = await AskQuestionAboutFile(confidential.ApiKey, settings.Question, fileAsText, model, settings, stoppingToken);
             return response;
         }
 
@@ -256,7 +262,7 @@ namespace ICGSoftware.Library.LogsAuswerten
         }
 
         //ask AI about a file
-        public static async Task<string> AskQuestionAboutFile(string apiKey, string question, string FileAsText, string model, ApplicationSettingsClass settings, CancellationToken stoppingToken)
+        public static async Task<string> AskQuestionAboutFile(string apiKey, string question, string FileAsText, string model, AppSettingsClassDev settings, CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
             // or check periodically

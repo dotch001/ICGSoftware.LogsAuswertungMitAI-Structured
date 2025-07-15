@@ -8,7 +8,7 @@ namespace ICGSoftware.Library.Logging
 {
     internal class ApplicationSettingsClass
     {
-        public required string outputFolder { get; set; }
+        public required string outputFolderForLogs { get; set; }
         public required string logFileName { get; set; }
 
     }

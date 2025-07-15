@@ -28,10 +28,4 @@
     <ProjectReference Include="..\ICGSoftware.Library.LogsAuswerten\ICGSoftware.Library.LogsAuswerten.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="applicationSettings_EmailVersenden.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

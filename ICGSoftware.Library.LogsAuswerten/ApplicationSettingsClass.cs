@@ -1,8 +1,7 @@
 ﻿namespace ICGSoftware.Library.LogsAuswerten
 {
-    public class ApplicationSettingsClass
+    public class AppSettingsClassDev
     {
-        public required string ApiKey { get; set; }
         public required string Question { get; set; }
         public required string startTerm { get; set; }
         public required string[] inputFolderPaths { get; set; }
@@ -12,6 +11,11 @@
         public required string[] models { get; set; }
         public int chosenModel { get; set; }
         public int maxSizeInKB { get; set; }
+    }
+
+    public class AppSettingsClassConf
+    {
+        public required string ApiKey { get; set; }
     }
 
 }

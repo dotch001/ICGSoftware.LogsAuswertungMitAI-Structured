@@ -27,10 +27,4 @@
     <ProjectReference Include="..\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="applicationSettings_Logging.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

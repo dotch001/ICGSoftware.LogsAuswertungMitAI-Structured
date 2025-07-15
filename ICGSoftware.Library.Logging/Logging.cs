@@ -9,23 +9,23 @@ namespace ICGSoftware.Library.Logging
         public static void LoggerFunction(string TypeOfMessage, string message)
         {
             var config = new ConfigurationBuilder()
-                .AddJsonFile("applicationSettings_Logging.json")
+                .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Development.json")
                 .Build();
 
-            var settings = config.GetSection("ApplicationSettings").Get<ApplicationSettingsClass>();
+            var settings = config.GetSection("AppSettings").Get<ApplicationSettingsClass>();
 
-            if (!Directory.Exists(settings.outputFolder)) { Directory.CreateDirectory(settings.outputFolder); }
+            if (!Directory.Exists(settings.outputFolderForLogs)) { Directory.CreateDirectory(settings.outputFolderForLogs); }
 
             int i = 0;
 
-            string outputFile = settings.outputFolder + "\\" + settings.logFileName + i + ".log";
+            string outputFile = settings.outputFolderForLogs + "\\" + settings.logFileName + i + ".log";
 
             bool isLoggerConfigured = Log.Logger != Logger.None;
 
             while (File.Exists(outputFile) && new FileInfo(outputFile).Length / 1024 >= 300)
             {
                 i++;
-                outputFile = settings.outputFolder + "\\" + settings.logFileName + i + ".log";
+                outputFile = settings.outputFolderForLogs + "\\" + settings.logFileName + i + ".log";
             }
             if (!isLoggerConfigured)
             {

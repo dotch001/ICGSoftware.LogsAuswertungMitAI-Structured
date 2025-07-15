@@ -28,10 +28,4 @@
     <ProjectReference Include="..\ICGSoftware.Library.Logging\ICGSoftware.Library.Logging.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="applicationSettings_LogsAuswerten.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

@@ -17,10 +17,14 @@ namespace ICGSoftware.Library.EmailVersenden
             try
             {
                 var config = new ConfigurationBuilder()
-                .AddJsonFile("applicationSettings_EmailVersenden.json")
+                .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Confidential.json")
                 .Build();
 
-                var settings = config.GetSection("ApplicationSettings").Get<ApplicationSettingsClass>();
+                var config2 = new ConfigurationBuilder()
+                .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Development.json")
+                .Build();
+
+                var settings = config2.GetSection("AppSettings").Get<ApplicationSettingsClass>();
                 var authSettings = config.GetSection("AuthenticationSettings").Get<AuthenticationSettingsClass>();
 
                 var confidentialClient = ConfidentialClientApplicationBuilder
