@@ -1,6 +1,6 @@
 ﻿using Azure.Identity;
 using Azure.Messaging;
-using ICGSoftware.Library.CreateFirebirdDatabase;
+using ICGSoftware.Library.GetAppSettings;
 using ICGSoftware.Library.Logging;
 using ICGSoftware.Library.LogsAuswerten;
 using Microsoft.Extensions.Configuration;
@@ -45,7 +45,7 @@ namespace ICGSoftware.Library.EmailVersenden
             }
             catch (Exception ex)
             {
-                loggingClass.LoggerFunction("Error", $"Error sending email: {ex.Message}");
+                loggingClass.LoggerFunction("Error from Authentication:", $"Error sending email: {ex.Message}");
             }
         }
 
@@ -96,7 +96,7 @@ namespace ICGSoftware.Library.EmailVersenden
             loggingClass.LoggerFunction("Info", "Email sent successfully."); }
             catch (Exception ex)
             {
-                loggingClass.LoggerFunction("Error", $"SendEmail failed: {ex.Message}");
+                loggingClass.LoggerFunction("Error from SendEmail", $"SendEmail failed: {ex.Message}");
             }
         }
     }

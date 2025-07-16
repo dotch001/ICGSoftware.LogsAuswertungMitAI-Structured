@@ -4,7 +4,7 @@ using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
 using ICGSoftware.Library.Logging;
 using ICGSoftware.Library.LogsAuswerten;
 using ICGSoftware.Library.CreateFirebirdDatabase;
-using ICGSoftware.Library.CreateFirebirdDatabase;
+using ICGSoftware.Library.GetAppSettings;
 
 
 class Program

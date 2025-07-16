@@ -1,18 +1,19 @@
-﻿using ICGSoftware.Library.CreateFirebirdDatabase;
+﻿using ICGSoftware.Library.GetAppSettings;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
+using ICGSoftware.Library.CreateFirebirdDatabase;
+using ICGSoftware.Library.Logging;
 using System.Xml;
 using ICGSoftware.Library;
 
 namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
 {
-    public class ErrorsKategorisierenUndZaehlenClass(IOptions<AppSettingsClassDev> settings, IOptions<AppSettingsClassConf> confidential, LoggingClass loggingClass)
+    public class ErrorsKategorisierenUndZaehlenClass(CreateFirebirdDatabaseClass createFirebirdDatabase)
     {
-        private readonly AppSettingsClassDev settings = settings.Value;
-        private readonly AppSettingsClassConf confidential = confidential.Value;
-        private readonly LoggingClass _LoggingClass = loggingClass;
+        CreateFirebirdDatabaseClass _createFirebirdDatabase = createFirebirdDatabase;
+    
 
         Dictionary<string, List<string>> categoryTimestamps = new Dictionary<string, List<string>>();
         Dictionary<string, int> categoryCounts = new Dictionary<string, int>();
@@ -56,6 +57,8 @@ namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
                 normalized = normalized.Substring(0, colonIndex + 1);
 
             KategorisierenUndZählen(normalized, timestamp);
+
+            
 
             return Task.CompletedTask;
         }
@@ -101,6 +104,7 @@ namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
                 string jsonString = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented);
                 await writer.WriteLineAsync(jsonString);
             }
+            _createFirebirdDatabase.CreateDatabase(outputFile);
         }
     }
 }

@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Core;
+using ICGSoftware.Library.GetAppSettings;
 using System.Runtime;
-using ICGSoftware.Library.CreateFirebirdDatabase;
 
 namespace ICGSoftware.Library.Logging
 {
@@ -13,7 +13,6 @@ namespace ICGSoftware.Library.Logging
     
         public void LoggerFunction(string TypeOfMessage, string message)
         {
-            Console.WriteLine("Log folder: " + _settings.outputFolderForLogs);
 
             if (!Directory.Exists(_settings.outputFolderForLogs)) { Directory.CreateDirectory(_settings.outputFolderForLogs); }
 

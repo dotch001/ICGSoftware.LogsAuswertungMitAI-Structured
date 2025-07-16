@@ -5,7 +5,7 @@ using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
 using ICGSoftware.Library.Logging;
 using ICGSoftware.Library.LogsAuswerten;
 using Microsoft.Extensions.Options;
-using ICGSoftware.Library.CreateFirebirdDatabase;
+using ICGSoftware.Library.GetAppSettings;
 
 namespace ICGSoftware.Service
 {
@@ -37,7 +37,7 @@ namespace ICGSoftware.Service
 
             try
             {
-                string aiResponse = await _FilterErrAndAskAIClass.FilterErrAndAskAI(stoppingToken);
+                string aiResponse = await _FilterErrAndAskAIClass.FilterErrAndAskAI(_ErrorsKategorisierenUndZaehlenClass, stoppingToken);
                 await _EmailVersendenClass.Authentication(aiResponse);
 
                 _LoggingClass.LoggerFunction("Info", "Worker finished");

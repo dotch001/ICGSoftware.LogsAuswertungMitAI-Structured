@@ -4,11 +4,20 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.14.2" />
+    <PackageReference Include="EntityFramework.Firebird" Version="10.1.0" />
+    <PackageReference Include="EntityFrameworkCore.FirebirdSQL" Version="2.1.2.2" />
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.3.3" />
+    <PackageReference Include="FirebirdSql.EntityFrameworkCore.Firebird" Version="12.0.0" />
+    <PackageReference Include="FirebirdSqlCust.Data.FirebirdClient641" Version="6.4.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
@@ -25,7 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ICGSoftware.Library.CreateFirebirdDatabase\ICGSoftware.Library.CreateFirebirdDatabase.csproj" />
     <ProjectReference Include="..\ICGSoftware.Library.GetAppSettings\ICGSoftware.Library.GetAppSettings.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.Logging\ICGSoftware.Library.Logging.csproj" />
   </ItemGroup>
 
 </Project>

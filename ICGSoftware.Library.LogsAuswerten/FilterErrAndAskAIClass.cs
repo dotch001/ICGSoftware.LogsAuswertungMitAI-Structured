@@ -1,5 +1,5 @@
 ﻿using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
-using ICGSoftware.Library.CreateFirebirdDatabase;
+using ICGSoftware.Library.GetAppSettings;
 using ICGSoftware.Library.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -20,7 +20,7 @@ namespace ICGSoftware.Library.LogsAuswerten
         private string outputFile = "";
         private string outputFolder = "";
 
-        public async Task<string> FilterErrAndAskAI(CancellationToken stoppingToken)
+        public async Task<string> FilterErrAndAskAI(ErrorsKategorisierenUndZaehlenClass errorsKategorisierenUndZaehlenClass, CancellationToken stoppingToken)
         {
 
             // Declaring variables
@@ -46,21 +46,6 @@ namespace ICGSoftware.Library.LogsAuswerten
             string fileAsText = "";
 
             string allResponses = "";
-
-            // Configuration of ApplicationSettings
-            /*
-            var config = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Development.json")
-                .Build();
-
-            var settings = config.GetSection("AppSettingsForLogsAuswerten").Get<AppSettingsClassDev>();
-
-            var config2 = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Confidential.json")
-                .Build();
-
-            var confidential = config2.GetSection("AppSettings").Get<AppSettingsClassConf>();
-            */
 
             try
             {
@@ -220,21 +205,17 @@ namespace ICGSoftware.Library.LogsAuswerten
                             ConsoleLogsAndInformation(  settings.inform, response);
                         }
                     }
-                    await ErrorsKategorisierenUndZaehlenClass.ErrorsKategorisieren(outputFolder);
+                    await errorsKategorisierenUndZaehlenClass.ErrorsKategorisieren(outputFolder);
                 }
 
                 return allResponses;
             }
             catch (Exception ex)
             {
-                _LoggingClass.LoggerFunction("Error", $"Error: {ex.Message}");
-                return "Error: " + ex.Message;
+                _LoggingClass.LoggerFunction("Error", $"from FilterErrAndAskAI: {ex.Message}");
+                return "Error from FilterErrAndAskAI: " + ex.Message;
             }
-
-
         }
-
-
 
         public async Task<string> AskAndGetResponse(string outputFolder, int k, string fileAsText, AppSettingsClassDev settings,AppSettingsClassConf confidential, CancellationToken stoppingToken)
         {

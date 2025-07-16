@@ -1,4 +1,4 @@
-﻿namespace ICGSoftware.Library.CreateFirebirdDatabase
+﻿namespace ICGSoftware.Library.GetAppSettings
 { 
     public class AppSettingsClassDev
     {
