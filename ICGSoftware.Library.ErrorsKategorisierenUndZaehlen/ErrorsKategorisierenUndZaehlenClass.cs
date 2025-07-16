@@ -1,16 +1,23 @@
-﻿using Newtonsoft.Json;
+﻿using ICGSoftware.Library.CreateFirebirdDatabase;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
+using ICGSoftware.Library;
 
 namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
 {
-    public class ErrorsKategorisierenUndZaehlenClass
+    public class ErrorsKategorisierenUndZaehlenClass(IOptions<AppSettingsClassDev> settings, IOptions<AppSettingsClassConf> confidential, LoggingClass loggingClass)
     {
-        static Dictionary<string, List<string>> categoryTimestamps = new Dictionary<string, List<string>>();
-        static Dictionary<string, int> categoryCounts = new Dictionary<string, int>();
+        private readonly AppSettingsClassDev settings = settings.Value;
+        private readonly AppSettingsClassConf confidential = confidential.Value;
+        private readonly LoggingClass _LoggingClass = loggingClass;
 
-        public static async Task ErrorsKategorisieren(string outputFolder)
+        Dictionary<string, List<string>> categoryTimestamps = new Dictionary<string, List<string>>();
+        Dictionary<string, int> categoryCounts = new Dictionary<string, int>();
+
+        public async Task ErrorsKategorisieren(string outputFolder)
         {
             string[] fileNames = Directory.GetFiles(outputFolder);
 
@@ -25,7 +32,7 @@ namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
             await WriteToFile(outputFolder);
         }
 
-        public static Task GetError(string line)
+        public Task GetError(string line)
         {
             if (string.IsNullOrWhiteSpace(line) || !line.Contains("[ERR]"))
                 return Task.CompletedTask;
@@ -54,7 +61,7 @@ namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
         }
 
 
-        public static void KategorisierenUndZählen(string category, string timestamp)
+        public void KategorisierenUndZählen(string category, string timestamp)
         {
             if (string.IsNullOrWhiteSpace(category))
                 category = "(no category)";
@@ -69,9 +76,9 @@ namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
             categoryTimestamps[category].Add(timestamp);
         }
 
-        private static async Task WriteToFile(string outputFolder)
+        private async Task WriteToFile(string outputFolder)
         {
-            string outputFile = Path.Combine(outputFolder, "Error Liste.txt");
+            string outputFile = Path.Combine(outputFolder, "ErrorListe.json");
 
             using StreamWriter writer = new StreamWriter(outputFile, false);
 

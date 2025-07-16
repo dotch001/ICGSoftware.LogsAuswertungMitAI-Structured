@@ -1,31 +1,32 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Core;
+using System.Runtime;
+using ICGSoftware.Library.CreateFirebirdDatabase;
 
 namespace ICGSoftware.Library.Logging
 {
-    public class LoggingClass
+    public class LoggingClass(IOptions<AppSettingsClassDev> settings)
     {
-        public static void LoggerFunction(string TypeOfMessage, string message)
+        private readonly AppSettingsClassDev _settings = settings.Value;
+    
+        public void LoggerFunction(string TypeOfMessage, string message)
         {
-            var config = new ConfigurationBuilder()
-                .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Development.json")
-                .Build();
+            Console.WriteLine("Log folder: " + _settings.outputFolderForLogs);
 
-            var settings = config.GetSection("AppSettings").Get<ApplicationSettingsClass>();
-
-            if (!Directory.Exists(settings.outputFolderForLogs)) { Directory.CreateDirectory(settings.outputFolderForLogs); }
+            if (!Directory.Exists(_settings.outputFolderForLogs)) { Directory.CreateDirectory(_settings.outputFolderForLogs); }
 
             int i = 0;
 
-            string outputFile = settings.outputFolderForLogs + "\\" + settings.logFileName + i + ".log";
+            string outputFile = _settings.outputFolderForLogs + "\\" + _settings.logFileName + i + ".log";
 
             bool isLoggerConfigured = Log.Logger != Logger.None;
 
             while (File.Exists(outputFile) && new FileInfo(outputFile).Length / 1024 >= 300)
             {
                 i++;
-                outputFile = settings.outputFolderForLogs + "\\" + settings.logFileName + i + ".log";
+                outputFile = _settings.outputFolderForLogs + "\\" + _settings.logFileName + i + ".log";
             }
             if (!isLoggerConfigured)
             {
@@ -50,9 +51,5 @@ namespace ICGSoftware.Library.Logging
                 Log.Debug(message);
             }
         }
-
-
-
-
     }
 }

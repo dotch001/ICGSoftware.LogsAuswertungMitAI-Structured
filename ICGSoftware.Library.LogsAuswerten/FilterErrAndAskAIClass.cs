@@ -1,19 +1,26 @@
-﻿using ICGSoftware.Library.Logging;
+﻿using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
+using ICGSoftware.Library.CreateFirebirdDatabase;
+using ICGSoftware.Library.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
 
 
 namespace ICGSoftware.Library.LogsAuswerten
 {
-    public class FilterErrAndAskAIClass
+    public class FilterErrAndAskAIClass(IOptions<AppSettingsClassDev> settings, IOptions<AppSettingsClassConf> confidential, LoggingClass loggingClass)
     {
-        private static string outputFile = "";
-        private static string outputFolder = "";
-        public static async Task<string> FilterErrAndAskAI(CancellationToken stoppingToken)
+        private readonly AppSettingsClassDev settings = settings.Value;
+        private readonly AppSettingsClassConf confidential = confidential.Value;
+        private readonly LoggingClass _LoggingClass = loggingClass;
+
+        private string outputFile = "";
+        private string outputFolder = "";
+
+        public async Task<string> FilterErrAndAskAI(CancellationToken stoppingToken)
         {
 
             // Declaring variables
@@ -41,19 +48,19 @@ namespace ICGSoftware.Library.LogsAuswerten
             string allResponses = "";
 
             // Configuration of ApplicationSettings
-
+            /*
             var config = new ConfigurationBuilder()
                 .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Development.json")
                 .Build();
 
-            var settings = config.GetSection("AppSettings").Get<AppSettingsClassDev>();
+            var settings = config.GetSection("AppSettingsForLogsAuswerten").Get<AppSettingsClassDev>();
 
             var config2 = new ConfigurationBuilder()
                 .AddJsonFile(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + "\\ICGSoftware.LogsAuswertungMitAI\\appsettings.Confidential.json")
                 .Build();
 
             var confidential = config2.GetSection("AppSettings").Get<AppSettingsClassConf>();
-
+            */
 
             try
             {
@@ -144,7 +151,7 @@ namespace ICGSoftware.Library.LogsAuswerten
                             string? lineread;
                             while ((lineread = reader.ReadLine()) != null)
                             {
-                                if (lineread.Contains(settings.startTerm, StringComparison.OrdinalIgnoreCase))
+                                if (lineread.Contains(  settings.startTerm, StringComparison.OrdinalIgnoreCase))
                                 {
                                     found = true;
                                 }
@@ -174,7 +181,7 @@ namespace ICGSoftware.Library.LogsAuswerten
                                     {
                                         FileInfo fileInfo = new FileInfo(outputFile);
                                         long fileSize = fileInfo.Length;
-                                        ConsoleLogsAndInformation(settings.inform, $"File size: {fileSize / 1024} KB of file {fileInfo.Name}");
+                                        ConsoleLogsAndInformation(  settings.inform, $"File size: {fileSize / 1024} KB of file {fileInfo.Name}");
 
                                         if (fileSize / 1024 >= settings.maxSizeInKB - 20)
                                         {
@@ -204,14 +211,13 @@ namespace ICGSoftware.Library.LogsAuswerten
                     // Asks AI about the files in the output folder (for each file)
                     if (settings.AskAI)
                     {
-                        LoggingClass.LoggerFunction("Info", "Asking AI");
                         for (int k = 0; k < Directory.GetFiles(outputFolder).Length; k++)
                         {
                             string[] filesInOutput = Directory.GetFiles(outputFolder);
                             string PathToFile = filesInOutput[k];
                             string response = await AskAndGetResponse(outputFolder, k, fileAsText, settings, confidential, stoppingToken);
                             allResponses = allResponses + $"<b><br /><br />----------------------------------------------{PathToFile}----------------------------------------------<br /><br /></b>" + response;
-                            ConsoleLogsAndInformation(settings.inform, response);
+                            ConsoleLogsAndInformation(  settings.inform, response);
                         }
                     }
                     await ErrorsKategorisierenUndZaehlenClass.ErrorsKategorisieren(outputFolder);
@@ -221,21 +227,16 @@ namespace ICGSoftware.Library.LogsAuswerten
             }
             catch (Exception ex)
             {
-                LoggingClass.LoggerFunction("Error", $"Error: {ex.Message}");
+                _LoggingClass.LoggerFunction("Error", $"Error: {ex.Message}");
                 return "Error: " + ex.Message;
             }
 
 
         }
-        public static async Task<string> giveOutputFilepath()
-        {
-            if (outputFile != "") { return outputFile.Substring(0, outputFile.LastIndexOf("ExtentionLog")); } else { return outputFolder + "\\ExtentionLogsFolder"; }
-
-        }
 
 
 
-        public static async Task<string> AskAndGetResponse(string outputFolder, int k, string fileAsText, AppSettingsClassDev settings,AppSettingsClassConf confidential, CancellationToken stoppingToken)
+        public async Task<string> AskAndGetResponse(string outputFolder, int k, string fileAsText, AppSettingsClassDev settings,AppSettingsClassConf confidential, CancellationToken stoppingToken)
         {
             string[] filesInOutput = Directory.GetFiles(outputFolder);
             string PathToFile = filesInOutput[k];
@@ -253,7 +254,7 @@ namespace ICGSoftware.Library.LogsAuswerten
         }
 
 
-        public static void ConsoleLogsAndInformation(bool inform, string theInformation)
+        public void ConsoleLogsAndInformation(bool inform, string theInformation)
         {
             if (inform)
             {
@@ -262,7 +263,7 @@ namespace ICGSoftware.Library.LogsAuswerten
         }
 
         //ask AI about a file
-        public static async Task<string> AskQuestionAboutFile(string apiKey, string question, string FileAsText, string model, AppSettingsClassDev settings, CancellationToken stoppingToken)
+        public async Task<string> AskQuestionAboutFile(string apiKey, string question, string FileAsText, string model, AppSettingsClassDev settings, CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
             // or check periodically

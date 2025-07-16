@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.14.2" />
+    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="10.3.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.7" />
@@ -25,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.GetAppSettings\ICGSoftware.Library.GetAppSettings.csproj" />
   </ItemGroup>
 
 </Project>

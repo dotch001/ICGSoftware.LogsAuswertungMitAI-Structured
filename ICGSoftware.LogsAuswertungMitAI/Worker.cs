@@ -1,39 +1,55 @@
+using ICGSoftware.Service;
+using ICGSoftware.Library.CreateFirebirdDatabase;
 using ICGSoftware.Library.EmailVersenden;
+using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
 using ICGSoftware.Library.Logging;
 using ICGSoftware.Library.LogsAuswerten;
+using Microsoft.Extensions.Options;
+using ICGSoftware.Library.CreateFirebirdDatabase;
 
 namespace ICGSoftware.Service
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        private readonly AppSettingsClassDev _appSettingsClassDev;
+        private readonly AppSettingsClassConf _appSettingsClassConf;
+        private readonly FilterErrAndAskAIClass _FilterErrAndAskAIClass;
+        private readonly LoggingClass _LoggingClass;
+        private readonly ErrorsKategorisierenUndZaehlenClass _ErrorsKategorisierenUndZaehlenClass;
+        private readonly EmailVersendenClass _EmailVersendenClass;
+        private readonly CreateFirebirdDatabaseClass _CreateFirebirdDatabaseClass;
 
-        public Worker(ILogger<Worker> logger)
+
+        public Worker(IOptions<AppSettingsClassDev> appSettingsClassDev, IOptions<AppSettingsClassConf> appSettingsClassConf, FilterErrAndAskAIClass FilterErrAndAskAIClassSettings, LoggingClass loggingClass, EmailVersendenClass EmailVersendenClassSettings, ErrorsKategorisierenUndZaehlenClass ErrorsKategorisierenUndZaehlenClassSettings)
         {
-            _logger = logger;
+            _LoggingClass = loggingClass;
+            _appSettingsClassDev = appSettingsClassDev.Value;
+            _appSettingsClassConf = appSettingsClassConf.Value;
+            _FilterErrAndAskAIClass = FilterErrAndAskAIClassSettings;
+            _EmailVersendenClass = EmailVersendenClassSettings;
+            _ErrorsKategorisierenUndZaehlenClass = ErrorsKategorisierenUndZaehlenClassSettings;
+
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            LoggingClass.LoggerFunction("Info", "Worker started");
+            _LoggingClass.LoggerFunction("Info", "Worker started");
 
             try
             {
-                string aiResponse = await FilterErrAndAskAIClass.FilterErrAndAskAI(stoppingToken);
-                await EmailVersendenClass.Process(aiResponse);
+                string aiResponse = await _FilterErrAndAskAIClass.FilterErrAndAskAI(stoppingToken);
+                await _EmailVersendenClass.Authentication(aiResponse);
 
-                LoggingClass.LoggerFunction("Info", "Worker finished");
+                _LoggingClass.LoggerFunction("Info", "Worker finished");
 
                 Environment.Exit(0);
 
             }
             catch (Exception ex)
             {
-                LoggingClass.LoggerFunction("Error", ex + " Worker crashed");
+                _LoggingClass.LoggerFunction("Error", ex + " Worker crashed");
                 Environment.Exit(1);
             }
         }
-
-
     }
 }
