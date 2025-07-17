@@ -1,16 +1,15 @@
 ﻿using FirebirdSql.Data.FirebirdClient;
-using ICGSoftware.Library.GetAppSettings;
-using ICGSoftware.Library.Logging;
+using ICGSoftware.GetAppSettings;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
-namespace ICGSoftware.Library.CreateFirebirdDatabase
+namespace ICGSoftware.CreateFirebirdDatabase
 {
-    public class CreateFirebirdDatabaseClass(IOptions<AppSettingsClassDev> settings, IOptions<AppSettingsClassConf> confidential, LoggingClass loggingClass)
+    public class CreateFirebirdDatabase(IOptions<AppSettingsClassDev> settings, IOptions<AppSettingsClassConf> confidential, Logging.Logging loggingClass)
     {
         private readonly AppSettingsClassDev settings = settings.Value;
         private readonly AppSettingsClassConf confidential = confidential.Value;
-        private readonly LoggingClass _LoggingClass = loggingClass;
+        private readonly Logging.Logging _LoggingClass = loggingClass;
 
         public void CreateDatabase(string outputFile)
         {
@@ -20,9 +19,8 @@ namespace ICGSoftware.Library.CreateFirebirdDatabase
 
                 if (!Directory.Exists(settings.outputFolderPath + "\\DBFolder")) { Directory.CreateDirectory(settings.outputFolderPath + "\\DBFolder"); }
 
-                string outputFileForDB = settings.outputFolderPath + "\\DBFolder\\ErrorsKategorisierenDatabase";
-
-                string connectionString = $"Database={outputFileForDB};DataSource=localhost;User={settings.DBUser};Password={confidential.DBPassword};Charset=UTF8;";
+                string outputFileForDB = settings.outputFolderPath + $"\\DBFolder\\{settings.DBDatabase}";
+                string connectionString = $"Database={outputFileForDB};DataSource={settings.DBDataSource};User={settings.DBUser};Password={confidential.DBPassword};Charset=UTF8;Dialect=3;Port={settings.DBPort}";
 
                 // Create DB if it doesn't exist
                 if (!File.Exists(outputFileForDB))

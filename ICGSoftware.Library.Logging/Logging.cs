@@ -1,31 +1,29 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ICGSoftware.GetAppSettings;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Core;
-using ICGSoftware.Library.GetAppSettings;
-using System.Runtime;
 
-namespace ICGSoftware.Library.Logging
+namespace ICGSoftware.Logging
 {
-    public class LoggingClass(IOptions<AppSettingsClassDev> settings)
+    public class Logging(IOptions<AppSettingsClassDev> settings)
     {
-        private readonly AppSettingsClassDev _settings = settings.Value;
-    
+        private readonly AppSettingsClassDev settings = settings.Value;
+
         public void LoggerFunction(string TypeOfMessage, string message)
         {
 
-            if (!Directory.Exists(_settings.outputFolderPath + "\\Logs")) { Directory.CreateDirectory(_settings.outputFolderPath + "\\Logs"); }
+            if (!Directory.Exists(settings.outputFolderPath + "\\Logs")) { Directory.CreateDirectory(settings.outputFolderPath + "\\Logs"); }
 
             int i = 0;
 
-            string outputFile = _settings.outputFolderPath + "\\Logs\\" + _settings.logFileName + i + ".log";
+            string outputFile = settings.outputFolderPath + "\\Logs\\" + settings.logFileName + i + ".log";
 
             bool isLoggerConfigured = Log.Logger != Logger.None;
 
             while (File.Exists(outputFile) && new FileInfo(outputFile).Length / 1024 >= 300)
             {
                 i++;
-                outputFile = _settings.outputFolderPath + "\\Logs\\" + _settings.logFileName + i + ".log";
+                outputFile = settings.outputFolderPath + "\\Logs\\" + settings.logFileName + i + ".log";
             }
             if (!isLoggerConfigured)
             {

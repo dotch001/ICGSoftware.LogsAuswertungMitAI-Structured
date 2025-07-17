@@ -1,11 +1,6 @@
-using ICGSoftware.Service;
-using ICGSoftware.Library.CreateFirebirdDatabase;
-using ICGSoftware.Library.EmailVersenden;
-using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
-using ICGSoftware.Library.Logging;
-using ICGSoftware.Library.LogsAuswerten;
+using ICGSoftware.GetAppSettings;
+using ICGSoftware.LogsAuswerten;
 using Microsoft.Extensions.Options;
-using ICGSoftware.Library.GetAppSettings;
 
 namespace ICGSoftware.Service
 {
@@ -13,46 +8,46 @@ namespace ICGSoftware.Service
     {
         private readonly AppSettingsClassDev _appSettingsClassDev;
         private readonly AppSettingsClassConf _appSettingsClassConf;
-        private readonly FilterErrAndAskAIClass _FilterErrAndAskAIClass;
-        private readonly LoggingClass _LoggingClass;
-        private readonly ErrorsKategorisierenUndZaehlenClass _ErrorsKategorisierenUndZaehlenClass;
-        private readonly EmailVersendenClass _EmailVersendenClass;
-        private readonly CreateFirebirdDatabaseClass _CreateFirebirdDatabaseClass;
+        private readonly FilterErrAndAskAIClass _FilterErrAndAskAI;
+        private readonly Logging.Logging _Logging;
+        private readonly ErrorsKategorisierenUndZaehlen.ErrorsKategorisierenUndZaehlen _ErrorsKategorisierenUndZaehlen;
+        private readonly EmailVersenden.EmailVersenden _EmailVersenden;
+        private readonly CreateFirebirdDatabase.CreateFirebirdDatabase _CreateFirebirdDatabase;
 
 
-        public Worker(IOptions<AppSettingsClassDev> appSettingsClassDev, IOptions<AppSettingsClassConf> appSettingsClassConf, FilterErrAndAskAIClass FilterErrAndAskAIClassSettings, LoggingClass loggingClass, EmailVersendenClass EmailVersendenClassSettings, ErrorsKategorisierenUndZaehlenClass ErrorsKategorisierenUndZaehlenClassSettings, CreateFirebirdDatabaseClass CreateFirebirdDatabaseClassSettings)
+        public Worker(IOptions<AppSettingsClassDev> appSettingsClassDev, IOptions<AppSettingsClassConf> appSettingsClassConf, FilterErrAndAskAIClass FilterErrAndAskAIClassSettings, Logging.Logging loggingClass, EmailVersenden.EmailVersenden EmailVersendenClassSettings, ErrorsKategorisierenUndZaehlen.ErrorsKategorisierenUndZaehlen ErrorsKategorisierenUndZaehlenClassSettings, CreateFirebirdDatabase.CreateFirebirdDatabase CreateFirebirdDatabaseClassSettings)
         {
-            _LoggingClass = loggingClass;
+            _Logging = loggingClass;
             _appSettingsClassDev = appSettingsClassDev.Value;
             _appSettingsClassConf = appSettingsClassConf.Value;
-            _FilterErrAndAskAIClass = FilterErrAndAskAIClassSettings;
-            _EmailVersendenClass = EmailVersendenClassSettings;
-            _ErrorsKategorisierenUndZaehlenClass = ErrorsKategorisierenUndZaehlenClassSettings;
-            _CreateFirebirdDatabaseClass = CreateFirebirdDatabaseClassSettings;
+            _FilterErrAndAskAI = FilterErrAndAskAIClassSettings;
+            _EmailVersenden = EmailVersendenClassSettings;
+            _ErrorsKategorisierenUndZaehlen = ErrorsKategorisierenUndZaehlenClassSettings;
+            _CreateFirebirdDatabase = CreateFirebirdDatabaseClassSettings;
 
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _LoggingClass.LoggerFunction("Info", "Worker started");
-            while(!stoppingToken.IsCancellationRequested)
+            _Logging.LoggerFunction("Info", "Worker started");
+            while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
                     while (!stoppingToken.IsCancellationRequested)
                     {
-                        _LoggingClass.LoggerFunction("Info", "Worker started");
+                        _Logging.LoggerFunction("Info", "Worker started");
                         await Task.Delay(1000, stoppingToken);
-                        string aiResponse = await _FilterErrAndAskAIClass.FilterErrAndAskAI(_ErrorsKategorisierenUndZaehlenClass, stoppingToken);
-                        await _EmailVersendenClass.Authentication(aiResponse);
+                        string aiResponse = await _FilterErrAndAskAI.FilterErrAndAskAI(_ErrorsKategorisierenUndZaehlen, stoppingToken);
+                        await _EmailVersenden.Authentication(aiResponse);
                         await Task.Delay(_appSettingsClassDev.IntervallInSeconds * 1000, stoppingToken);
-                        _LoggingClass.LoggerFunction("Info", "Worker finished");
+                        _Logging.LoggerFunction("Info", "Worker finished");
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    _LoggingClass.LoggerFunction("Error", ex + " Worker crashed");
+                    _Logging.LoggerFunction("Error", ex + " Worker crashed");
                     break;
                 }
             }

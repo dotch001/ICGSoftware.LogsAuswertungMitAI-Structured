@@ -29,9 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen.csproj" />
-    <ProjectReference Include="..\ICGSoftware.Library.GetAppSettings\ICGSoftware.Library.GetAppSettings.csproj" />
-    <ProjectReference Include="..\ICGSoftware.Library.Logging\ICGSoftware.Library.Logging.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.GetAppSettings\ICGSoftware.GetAppSettings.csproj" />
   </ItemGroup>
 
 </Project>

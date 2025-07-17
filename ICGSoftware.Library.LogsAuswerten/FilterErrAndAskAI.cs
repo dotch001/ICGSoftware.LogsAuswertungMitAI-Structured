@@ -1,7 +1,4 @@
-﻿using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
-using ICGSoftware.Library.GetAppSettings;
-using ICGSoftware.Library.Logging;
-using Microsoft.Extensions.Configuration;
+﻿using ICGSoftware.GetAppSettings;
 using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
@@ -9,19 +6,19 @@ using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
 
-namespace ICGSoftware.Library.LogsAuswerten
+namespace ICGSoftware.LogsAuswerten
 {
-    public class FilterErrAndAskAIClass(IOptions<AppSettingsClassDev> settings, IOptions<AppSettingsClassConf> confidential, LoggingClass loggingClass)
+    public class FilterErrAndAskAIClass(IOptions<AppSettingsClassDev> settings, IOptions<AppSettingsClassConf> confidential, Logging.Logging loggingClass)
     {
         private readonly AppSettingsClassDev settings = settings.Value;
         private readonly AppSettingsClassConf confidential = confidential.Value;
-        private readonly LoggingClass _LoggingClass = loggingClass;
-        
+        private readonly Logging.Logging _LoggingClass = loggingClass;
+
 
         private string outputFile = "";
         private string outputFolder = "";
 
-        public async Task<string> FilterErrAndAskAI(ErrorsKategorisierenUndZaehlenClass errorsKategorisierenUndZaehlenClass, CancellationToken stoppingToken)
+        public async Task<string> FilterErrAndAskAI(ErrorsKategorisierenUndZaehlen.ErrorsKategorisierenUndZaehlen errorsKategorisierenUndZaehlenClass, CancellationToken stoppingToken)
         {
 
             // Declaring variables
@@ -74,7 +71,7 @@ namespace ICGSoftware.Library.LogsAuswerten
                             outputFolder = settings.outputFolderPath + "\\ExtentionLogsFolder" + overwritePrevention;
                         }
                         Directory.CreateDirectory(outputFolder);
-                        
+
                     }
 
                     completeOutputFolder = settings.outputFolderPath + "\\ExtentionLogsFolder" + overwritePrevention;
@@ -97,10 +94,10 @@ namespace ICGSoftware.Library.LogsAuswerten
                         // or check periodically
                         if (stoppingToken.IsCancellationRequested) return "";
 
-                        if (fileNames[j].Contains(TodaysDate)) {continue; }
+                        if (fileNames[j].Contains(TodaysDate)) { continue; }
 
-                            // OutputFilePath is declared
-                            outputFilePath = Path.Combine(outputFolder + "\\ExtentionLog" + fileNames[j].Replace(settings.inputFolderPaths[i] + "\\TritomWeb.Api", "").Substring(0, 8));
+                        // OutputFilePath is declared
+                        outputFilePath = Path.Combine(outputFolder + "\\ExtentionLog" + fileNames[j].Replace(settings.inputFolderPaths[i] + "\\TritomWeb.Api", "").Substring(0, 8));
 
                         // OutputFile is changed to include the file name and the number of files made
                         outputFile = Path.Combine(outputFilePath + "_" + madeNewFilesCount + ".txt");
@@ -126,7 +123,7 @@ namespace ICGSoftware.Library.LogsAuswerten
 
                         // InputPath of current file
                         inputPath = fileNames[j];
-                        
+
 
                         // Resetting the found bool (whether the startTerm has been found) for the current loop
                         found = false;
@@ -207,10 +204,10 @@ namespace ICGSoftware.Library.LogsAuswerten
                             ConsoleLogsAndInformation(settings.inform, response);
                         }
                     }
-                    
-                    
+
+
                 }
-                
+
                 return allResponses;
             }
             catch (Exception ex)

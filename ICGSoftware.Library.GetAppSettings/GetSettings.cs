@@ -1,5 +1,5 @@
-﻿namespace ICGSoftware.Library.GetAppSettings
-{ 
+﻿namespace ICGSoftware.GetAppSettings
+{
     public class AppSettingsClassDev
     {
         public required string outputFolderForDB { get; set; }
@@ -16,6 +16,9 @@
         public required string outputFolderForLogs { get; set; }
         public required string logFileName { get; set; }
         public required int IntervallInSeconds { get; set; } = 60 * 60 * 24; // Default to 24 hours
+        public required string DBDatabase { get; set; } = "ErrorsKategorisierenDatabase.fdb"; // Default database name       
+        public required string DBDataSource { get; set; } = "localhost"; // Default to localhost
+        public required int DBPort { get; set; } = 3050; // Default Firebird port
 
     }
     public class AppSettingsClassConf

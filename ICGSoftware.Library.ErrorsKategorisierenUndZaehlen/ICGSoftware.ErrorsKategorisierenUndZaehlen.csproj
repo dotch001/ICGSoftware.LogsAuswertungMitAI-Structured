@@ -4,6 +4,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,7 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ICGSoftware.Library.GetAppSettings\ICGSoftware.Library.GetAppSettings.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.CreateFirebirdDatabase\ICGSoftware.CreateFirebirdDatabase.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.GetAppSettings\ICGSoftware.GetAppSettings.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.Logging\ICGSoftware.Logging.csproj" />
   </ItemGroup>
 
 </Project>

@@ -34,11 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ICGSoftware.Library.CreateFirebirdDatabase\ICGSoftware.Library.CreateFirebirdDatabase.csproj" />
-    <ProjectReference Include="..\ICGSoftware.Library.EmailVersenden\ICGSoftware.Library.EmailVersenden.csproj" />
-    <ProjectReference Include="..\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen.csproj" />
-    <ProjectReference Include="..\ICGSoftware.Library.GetAppSettings\ICGSoftware.Library.GetAppSettings.csproj" />
-    <ProjectReference Include="..\ICGSoftware.Library.Logging\ICGSoftware.Library.Logging.csproj" />
-    <ProjectReference Include="..\ICGSoftware.Library.LogsAuswerten\ICGSoftware.Library.LogsAuswerten.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.CreateFirebirdDatabase\ICGSoftware.CreateFirebirdDatabase.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.EmailVersenden\ICGSoftware.EmailVersenden.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen\ICGSoftware.ErrorsKategorisierenUndZaehlen.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.GetAppSettings\ICGSoftware.GetAppSettings.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.Logging\ICGSoftware.Logging.csproj" />
+    <ProjectReference Include="..\ICGSoftware.Library.LogsAuswerten\ICGSoftware.LogsAuswerten.csproj" />
   </ItemGroup>
 </Project>

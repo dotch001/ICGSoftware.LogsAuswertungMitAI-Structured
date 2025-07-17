@@ -1,10 +1,10 @@
+using ICGSoftware.CreateFirebirdDatabase;
+using ICGSoftware.EmailVersenden;
+using ICGSoftware.ErrorsKategorisierenUndZaehlen;
+using ICGSoftware.GetAppSettings;
+using ICGSoftware.Logging;
+using ICGSoftware.LogsAuswerten;
 using ICGSoftware.Service;
-using ICGSoftware.Library.EmailVersenden;
-using ICGSoftware.Library.ErrorsKategorisierenUndZaehlen;
-using ICGSoftware.Library.Logging;
-using ICGSoftware.Library.LogsAuswerten;
-using ICGSoftware.Library.CreateFirebirdDatabase;
-using ICGSoftware.Library.GetAppSettings;
 
 
 class Program
@@ -36,13 +36,10 @@ class Program
 
                 // Register the custom class for DI
                 services.AddTransient<FilterErrAndAskAIClass>();
-                services.AddTransient<LoggingClass>();
-                services.AddTransient<ErrorsKategorisierenUndZaehlenClass>();
-                services.AddTransient<EmailVersendenClass>();
-                services.AddTransient<CreateFirebirdDatabaseClass>();
-
-
-
+                services.AddTransient<Logging>();
+                services.AddTransient<ErrorsKategorisierenUndZaehlen>();
+                services.AddTransient<EmailVersenden>();
+                services.AddTransient<CreateFirebirdDatabase>();
 
                 // Register the background worker
                 services.AddHostedService<Worker>();

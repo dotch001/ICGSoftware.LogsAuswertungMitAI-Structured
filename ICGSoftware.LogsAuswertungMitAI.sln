@@ -5,17 +5,17 @@ VisualStudioVersion = 17.14.36221.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.LogsAuswertungMitAI", "ICGSoftware.LogsAuswertungMitAI\ICGSoftware.LogsAuswertungMitAI.csproj", "{15F37AEC-C10C-46D3-8B04-0D6C0BC3253E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.Library.LogsAuswerten", "ICGSoftware.Library.LogsAuswerten\ICGSoftware.Library.LogsAuswerten.csproj", "{B9961D01-FA1C-4FAC-8357-7499B2F1135A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.LogsAuswerten", "ICGSoftware.Library.LogsAuswerten\ICGSoftware.LogsAuswerten.csproj", "{B9961D01-FA1C-4FAC-8357-7499B2F1135A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.Library.Logging", "ICGSoftware.Library.Logging\ICGSoftware.Library.Logging.csproj", "{D68D8B0F-80C5-428A-BE2A-44D072880D84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.Logging", "ICGSoftware.Library.Logging\ICGSoftware.Logging.csproj", "{D68D8B0F-80C5-428A-BE2A-44D072880D84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.Library.ErrorsKategorisierenUndZaehlen", "ICGSoftware.Library.ErrorsKategorisierenUndZaehlen\ICGSoftware.Library.ErrorsKategorisierenUndZaehlen.csproj", "{889BE8E1-0DDA-45FD-9D49-B0747357764E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.ErrorsKategorisierenUndZaehlen", "ICGSoftware.Library.ErrorsKategorisierenUndZaehlen\ICGSoftware.ErrorsKategorisierenUndZaehlen.csproj", "{889BE8E1-0DDA-45FD-9D49-B0747357764E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.Library.EmailVersenden", "ICGSoftware.Library.EmailVersenden\ICGSoftware.Library.EmailVersenden.csproj", "{26F08936-23E5-4182-BE80-C7C252E0F39B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.EmailVersenden", "ICGSoftware.Library.EmailVersenden\ICGSoftware.EmailVersenden.csproj", "{26F08936-23E5-4182-BE80-C7C252E0F39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.Library.CreateFirebirdDatabase", "ICGSoftware.Library.CreateFirebirdDatabase\ICGSoftware.Library.CreateFirebirdDatabase.csproj", "{EAA80334-8BB7-4C0D-932C-978275219B8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.CreateFirebirdDatabase", "ICGSoftware.Library.CreateFirebirdDatabase\ICGSoftware.CreateFirebirdDatabase.csproj", "{EAA80334-8BB7-4C0D-932C-978275219B8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.Library.GetAppSettings", "ICGSoftware.Library.GetAppSettings\ICGSoftware.Library.GetAppSettings.csproj", "{F9218A4A-CE62-40B7-82BB-8F805CFF786E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICGSoftware.GetAppSettings", "ICGSoftware.Library.GetAppSettings\ICGSoftware.GetAppSettings.csproj", "{F9218A4A-CE62-40B7-82BB-8F805CFF786E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
