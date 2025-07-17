@@ -31,6 +31,8 @@ namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
             }
 
             await WriteToFile(outputFolder);
+
+            _createFirebirdDatabase.CreateDatabase(Path.Combine(outputFolder, "ErrorListe.json"));
         }
 
         public Task GetError(string line)
@@ -58,8 +60,8 @@ namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
 
             KategorisierenUndZählen(normalized, timestamp);
 
-            
 
+            
             return Task.CompletedTask;
         }
 
@@ -83,28 +85,22 @@ namespace ICGSoftware.Library.ErrorsKategorisierenUndZaehlen
         {
             string outputFile = Path.Combine(outputFolder, "ErrorListe.json");
 
-            using StreamWriter writer = new StreamWriter(outputFile, false);
+            var allData = new JObject();
 
             foreach (var category in categoryCounts.Keys)
             {
-                string timestamps = string.Join(", ", categoryTimestamps[category]);
-                //await writer.WriteLineAsync($"{category} {categoryCounts[category]} mal auftreten um {timestamps}");
                 var inner = new JObject
                 {
                     ["Aufgetreten"] = categoryCounts[category] + " mal",
                     ["Timestamps"] = JToken.FromObject(categoryTimestamps[category])
                 };
 
-
-                var data = new JObject
-                {
-                    [category] = inner
-                };
-
-                string jsonString = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented);
-                await writer.WriteLineAsync(jsonString);
+                allData[category] = inner;
             }
-            _createFirebirdDatabase.CreateDatabase(outputFile);
+
+            string jsonString = JsonConvert.SerializeObject(allData, Newtonsoft.Json.Formatting.Indented);
+
+            await File.WriteAllTextAsync(outputFile, jsonString);
         }
     }
 }

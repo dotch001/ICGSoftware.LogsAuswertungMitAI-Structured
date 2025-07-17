@@ -16,6 +16,7 @@ namespace ICGSoftware.Library.LogsAuswerten
         private readonly AppSettingsClassDev settings = settings.Value;
         private readonly AppSettingsClassConf confidential = confidential.Value;
         private readonly LoggingClass _LoggingClass = loggingClass;
+        
 
         private string outputFile = "";
         private string outputFolder = "";
@@ -28,7 +29,7 @@ namespace ICGSoftware.Library.LogsAuswerten
             string[] fileNames;
 
             string outputFileOld = outputFile;
-            string outputFilePath;
+            string outputFilePath = "";
 
             string inputPath;
 
@@ -46,6 +47,7 @@ namespace ICGSoftware.Library.LogsAuswerten
             string fileAsText = "";
 
             string allResponses = "";
+            string completeOutputFolder = "";
 
             try
             {
@@ -60,32 +62,22 @@ namespace ICGSoftware.Library.LogsAuswerten
                     amountOfFiles = Directory.GetFiles(settings.inputFolderPaths[i]).Length;
                     fileNames = Directory.GetFiles(settings.inputFolderPaths[i]);
 
-                    // Making output folder
-                    if (settings.outputFolderPath == null)
+
+
+                    outputFolder = settings.outputFolderPath + "\\ExtentionLogsFolder" + overwritePrevention;
+                    if (!Directory.Exists(outputFolder)) { Directory.CreateDirectory(outputFolder); }
+                    else
                     {
-                        outputFolder = settings.inputFolderPaths[i] + "\\ExtentionLogsFolder";
                         while (Directory.Exists(outputFolder))
                         {
                             overwritePrevention++;
-                            outputFolder = settings.inputFolderPaths[i] + "\\ExtentionLogsFolder" + overwritePrevention;
+                            outputFolder = settings.outputFolderPath + "\\ExtentionLogsFolder" + overwritePrevention;
                         }
                         Directory.CreateDirectory(outputFolder);
-                    }
-                    else
-                    {
-                        outputFolder = settings.outputFolderPath + "\\ExtentionLogsFolder";
-                        if (!Directory.Exists(outputFolder)) { Directory.CreateDirectory(outputFolder); }
-                        else
-                        {
-                            while (Directory.Exists(outputFolder))
-                            {
-                                overwritePrevention++;
-                                outputFolder = settings.outputFolderPath + "\\ExtentionLogsFolder" + overwritePrevention;
-                            }
-                            Directory.CreateDirectory(outputFolder);
-                        }
+                        
                     }
 
+                    completeOutputFolder = settings.outputFolderPath + "\\ExtentionLogsFolder" + overwritePrevention;
 
 
                     // Defining endTermOld (when endTermOld != endTermNew make new folder for different days)
@@ -136,7 +128,7 @@ namespace ICGSoftware.Library.LogsAuswerten
                             string? lineread;
                             while ((lineread = reader.ReadLine()) != null)
                             {
-                                if (lineread.Contains(  settings.startTerm, StringComparison.OrdinalIgnoreCase))
+                                if (lineread.Contains(settings.startTerm, StringComparison.OrdinalIgnoreCase))
                                 {
                                     found = true;
                                 }
@@ -166,7 +158,7 @@ namespace ICGSoftware.Library.LogsAuswerten
                                     {
                                         FileInfo fileInfo = new FileInfo(outputFile);
                                         long fileSize = fileInfo.Length;
-                                        ConsoleLogsAndInformation(  settings.inform, $"File size: {fileSize / 1024} KB of file {fileInfo.Name}");
+                                        ConsoleLogsAndInformation(settings.inform, $"File size: {fileSize / 1024} KB of file {fileInfo.Name}");
 
                                         if (fileSize / 1024 >= settings.maxSizeInKB - 20)
                                         {
@@ -190,24 +182,26 @@ namespace ICGSoftware.Library.LogsAuswerten
                         // Informs about the progress
                         ConsoleLogsAndInformation(settings.inform, (j + 1) + " fertig von " + amountOfFiles);
                     }
-
+                    await errorsKategorisierenUndZaehlenClass.ErrorsKategorisieren(completeOutputFolder);
 
 
                     // Asks AI about the files in the output folder (for each file)
                     if (settings.AskAI)
                     {
+                        _LoggingClass.LoggerFunction("Info", "Asking AI");
                         for (int k = 0; k < Directory.GetFiles(outputFolder).Length; k++)
                         {
                             string[] filesInOutput = Directory.GetFiles(outputFolder);
                             string PathToFile = filesInOutput[k];
-                            string response = await AskAndGetResponse(outputFolder, k, fileAsText, settings, confidential, stoppingToken);
+                            string response = await AskAndGetResponse(outputFolder, k, fileAsText, stoppingToken);
                             allResponses = allResponses + $"<b><br /><br />----------------------------------------------{PathToFile}----------------------------------------------<br /><br /></b>" + response;
-                            ConsoleLogsAndInformation(  settings.inform, response);
+                            ConsoleLogsAndInformation(settings.inform, response);
                         }
                     }
-                    await errorsKategorisierenUndZaehlenClass.ErrorsKategorisieren(outputFolder);
+                    
+                    
                 }
-
+                
                 return allResponses;
             }
             catch (Exception ex)
@@ -217,7 +211,7 @@ namespace ICGSoftware.Library.LogsAuswerten
             }
         }
 
-        public async Task<string> AskAndGetResponse(string outputFolder, int k, string fileAsText, AppSettingsClassDev settings,AppSettingsClassConf confidential, CancellationToken stoppingToken)
+        public async Task<string> AskAndGetResponse(string outputFolder, int k, string fileAsText, CancellationToken stoppingToken)
         {
             string[] filesInOutput = Directory.GetFiles(outputFolder);
             string PathToFile = filesInOutput[k];
@@ -230,7 +224,7 @@ namespace ICGSoftware.Library.LogsAuswerten
             await Task.Delay(1000);
             ConsoleLogsAndInformation(settings.inform, $"\n\n----------------------------------------------{PathToFile}----------------------------------------------\n\n");
             string model = settings.models[settings.chosenModel];
-            string response = await AskQuestionAboutFile(confidential.ApiKey, settings.Question, fileAsText, model, settings, stoppingToken);
+            string response = await AskQuestionAboutFile(fileAsText, model, stoppingToken);
             return response;
         }
 
@@ -244,7 +238,7 @@ namespace ICGSoftware.Library.LogsAuswerten
         }
 
         //ask AI about a file
-        public async Task<string> AskQuestionAboutFile(string apiKey, string question, string FileAsText, string model, AppSettingsClassDev settings, CancellationToken stoppingToken)
+        public async Task<string> AskQuestionAboutFile(string FileAsText, string model, CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
             // or check periodically
@@ -252,14 +246,14 @@ namespace ICGSoftware.Library.LogsAuswerten
             var apiUrl = "https://openrouter.ai/api/v1/chat/completions";
 
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {confidential.ApiKey}");
 
             var requestBody = new
             {
                 model = model,
                 messages = new[]
                 {
-            new { role = "user", content = question + FileAsText }
+            new { role = "user", content = settings.Question + FileAsText }
             }
             };
 

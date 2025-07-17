@@ -7,12 +7,12 @@
         public required string Question { get; set; }
         public required string startTerm { get; set; }
         public required string[] inputFolderPaths { get; set; }
-        public string outputFolderPath { get; set; }
-        public bool inform { get; set; }
-        public bool AskAI { get; set; }
+        public required string outputFolderPath { get; set; }
+        public required bool inform { get; set; }
+        public required bool AskAI { get; set; }
         public required string[] models { get; set; }
-        public int chosenModel { get; set; }
-        public int maxSizeInKB { get; set; }
+        public required int chosenModel { get; set; }
+        public required int maxSizeInKB { get; set; }
         public required string outputFolderForLogs { get; set; }
         public required string logFileName { get; set; }
         

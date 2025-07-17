@@ -14,18 +14,18 @@ namespace ICGSoftware.Library.Logging
         public void LoggerFunction(string TypeOfMessage, string message)
         {
 
-            if (!Directory.Exists(_settings.outputFolderForLogs)) { Directory.CreateDirectory(_settings.outputFolderForLogs); }
+            if (!Directory.Exists(_settings.outputFolderPath + "\\Logs")) { Directory.CreateDirectory(_settings.outputFolderPath + "\\Logs"); }
 
             int i = 0;
 
-            string outputFile = _settings.outputFolderForLogs + "\\" + _settings.logFileName + i + ".log";
+            string outputFile = _settings.outputFolderPath + "\\Logs\\" + _settings.logFileName + i + ".log";
 
             bool isLoggerConfigured = Log.Logger != Logger.None;
 
             while (File.Exists(outputFile) && new FileInfo(outputFile).Length / 1024 >= 300)
             {
                 i++;
-                outputFile = _settings.outputFolderForLogs + "\\" + _settings.logFileName + i + ".log";
+                outputFile = _settings.outputFolderPath + "\\Logs\\" + _settings.logFileName + i + ".log";
             }
             if (!isLoggerConfigured)
             {

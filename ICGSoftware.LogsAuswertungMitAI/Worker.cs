@@ -20,7 +20,7 @@ namespace ICGSoftware.Service
         private readonly CreateFirebirdDatabaseClass _CreateFirebirdDatabaseClass;
 
 
-        public Worker(IOptions<AppSettingsClassDev> appSettingsClassDev, IOptions<AppSettingsClassConf> appSettingsClassConf, FilterErrAndAskAIClass FilterErrAndAskAIClassSettings, LoggingClass loggingClass, EmailVersendenClass EmailVersendenClassSettings, ErrorsKategorisierenUndZaehlenClass ErrorsKategorisierenUndZaehlenClassSettings)
+        public Worker(IOptions<AppSettingsClassDev> appSettingsClassDev, IOptions<AppSettingsClassConf> appSettingsClassConf, FilterErrAndAskAIClass FilterErrAndAskAIClassSettings, LoggingClass loggingClass, EmailVersendenClass EmailVersendenClassSettings, ErrorsKategorisierenUndZaehlenClass ErrorsKategorisierenUndZaehlenClassSettings, CreateFirebirdDatabaseClass CreateFirebirdDatabaseClassSettings)
         {
             _LoggingClass = loggingClass;
             _appSettingsClassDev = appSettingsClassDev.Value;
@@ -28,6 +28,7 @@ namespace ICGSoftware.Service
             _FilterErrAndAskAIClass = FilterErrAndAskAIClassSettings;
             _EmailVersendenClass = EmailVersendenClassSettings;
             _ErrorsKategorisierenUndZaehlenClass = ErrorsKategorisierenUndZaehlenClassSettings;
+            _CreateFirebirdDatabaseClass = CreateFirebirdDatabaseClassSettings;
 
         }
 
