@@ -79,6 +79,10 @@ namespace ICGSoftware.Library.LogsAuswerten
 
                     completeOutputFolder = settings.outputFolderPath + "\\ExtentionLogsFolder" + overwritePrevention;
 
+                    DateTime now = DateTime.Now;
+                    string TodaysDate = DateTime.Today.ToString("yyyyMMdd");
+
+                    _LoggingClass.LoggerFunction("Info", "Date: " + TodaysDate);
 
                     // Defining endTermOld (when endTermOld != endTermNew make new folder for different days)
                     endTermOld = fileNames[0].Replace(settings.inputFolderPaths[i] + "\\TritomWeb.Api", "").Substring(0, 4);
@@ -92,8 +96,12 @@ namespace ICGSoftware.Library.LogsAuswerten
                         stoppingToken.ThrowIfCancellationRequested();
                         // or check periodically
                         if (stoppingToken.IsCancellationRequested) return "";
-                        // OutputFilePath is declared
-                        outputFilePath = Path.Combine(outputFolder + "\\ExtentionLog" + fileNames[j].Replace(settings.inputFolderPaths[i] + "\\TritomWeb.Api", "").Substring(0, 8));
+
+                        if (fileNames[j].Contains(TodaysDate)) {continue; }
+
+                            // OutputFilePath is declared
+                            outputFilePath = Path.Combine(outputFolder + "\\ExtentionLog" + fileNames[j].Replace(settings.inputFolderPaths[i] + "\\TritomWeb.Api", "").Substring(0, 8));
+
                         // OutputFile is changed to include the file name and the number of files made
                         outputFile = Path.Combine(outputFilePath + "_" + madeNewFilesCount + ".txt");
 
@@ -118,6 +126,7 @@ namespace ICGSoftware.Library.LogsAuswerten
 
                         // InputPath of current file
                         inputPath = fileNames[j];
+                        
 
                         // Resetting the found bool (whether the startTerm has been found) for the current loop
                         found = false;
