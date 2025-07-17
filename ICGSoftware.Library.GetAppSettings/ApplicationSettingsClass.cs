@@ -15,7 +15,8 @@
         public required int maxSizeInKB { get; set; }
         public required string outputFolderForLogs { get; set; }
         public required string logFileName { get; set; }
-        
+        public required int IntervallInSeconds { get; set; } = 60 * 60 * 24; // Default to 24 hours
+
     }
     public class AppSettingsClassConf
     {

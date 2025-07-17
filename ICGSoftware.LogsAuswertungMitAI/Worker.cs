@@ -35,21 +35,26 @@ namespace ICGSoftware.Service
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _LoggingClass.LoggerFunction("Info", "Worker started");
-
-            try
+            while(!stoppingToken.IsCancellationRequested)
             {
-                string aiResponse = await _FilterErrAndAskAIClass.FilterErrAndAskAI(_ErrorsKategorisierenUndZaehlenClass, stoppingToken);
-                await _EmailVersendenClass.Authentication(aiResponse);
+                try
+                {
+                    while (!stoppingToken.IsCancellationRequested)
+                    {
+                        _LoggingClass.LoggerFunction("Info", "Worker started");
+                        await Task.Delay(1000, stoppingToken);
+                        string aiResponse = await _FilterErrAndAskAIClass.FilterErrAndAskAI(_ErrorsKategorisierenUndZaehlenClass, stoppingToken);
+                        await _EmailVersendenClass.Authentication(aiResponse);
+                        await Task.Delay(_appSettingsClassDev.IntervallInSeconds * 1000, stoppingToken);
+                        _LoggingClass.LoggerFunction("Info", "Worker finished");
+                    }
 
-                _LoggingClass.LoggerFunction("Info", "Worker finished");
-
-                Environment.Exit(0);
-
-            }
-            catch (Exception ex)
-            {
-                _LoggingClass.LoggerFunction("Error", ex + " Worker crashed");
-                Environment.Exit(1);
+                }
+                catch (Exception ex)
+                {
+                    _LoggingClass.LoggerFunction("Error", ex + " Worker crashed");
+                    break;
+                }
             }
         }
     }
